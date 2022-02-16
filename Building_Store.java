@@ -29,24 +29,22 @@ public class Main
       for (int x = 0; x < A.length; x++)
         for (int y = 0; y < A[0].length; y++)
         {
-            // Calculates the distance from the farthest house
+            // -1 is placed in the cell in which the house is located
             for (int i = 0; i < number_of_houses; i++)
-            {
-                distance_from_the_farthest_house = Math.abs( xCordinates[i] - x ) + Math.abs( yCordinates[i] - y );
-                Dist[x][y] = Dist[x][y] > distance_from_the_farthest_house ? Dist[x][y] : distance_from_the_farthest_house;
-                    
-            }
-                
-            // 0 is placed in the cell in which the house is located
-            for (int i = 0; i < number_of_houses; i++)
-            {
-                if( (x == xCordinates[i]) && (y == yCordinates[i])  )
-                    Dist[x][y] = 0;
-              
-            }
-                
+               if( (x == xCordinates[i]) && (y == yCordinates[i])  )
+                  Dist[x][y] = -1;
+        
+            
+            // Calculates the distance from the farthest house only for the cell in which the house is not located
+            if( Dist[x][y] != -1)
+                for (int i = 0; i < number_of_houses; i++)
+                {
+                    distance_from_the_farthest_house = Math.abs( xCordinates[i] - x ) + Math.abs( yCordinates[i] - y );
+                    Dist[x][y] = Dist[x][y] > distance_from_the_farthest_house ? Dist[x][y] : distance_from_the_farthest_house;
+                }
+           
             // Counting the number of empty cells at a distance of at most K to every house.
-            if( Dist[x][y] <= K &&  Dist[x][y] != 0) 
+            if( Dist[x][y] <= K &&  Dist[x][y] != -1) 
                 rezult++;
             
         }
@@ -83,7 +81,8 @@ public class Main
         K = 1;
         int[][] C = new int[2][2];
         C[0][1] = 1;
-               
+       
+        
         s = solution( K ,  C );
        
        System.out.println("The number of empty cells at a distance of at most " + K + " to every house is = " + s);
@@ -92,7 +91,8 @@ public class Main
         K = 2;
         int[][] D = new int[10][10];
         D[0][1] = 1;
-               
+       
+        
         s = solution( K ,  D );
        
         System.out.println("The number of empty cells at a distance of at most " + K + " to every house is = " + s);
