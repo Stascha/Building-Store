@@ -1,5 +1,4 @@
-
-import java.util.Random;
+import java.util.*;
 
 public class Main
 {
@@ -10,52 +9,49 @@ public class Main
       int rezult = 0;
       int distance_from_the_farthest_house;
       int[][] Dist = new int[A.length][A[0].length];
-       
-      // Count houses  
-      for (int i = 0; i < A.length; i++) 
-         for (int j = 0; j < A[0].length; j++) 
-             if(A[i][j] == 1)
-                 number_of_houses++;
-                 
-      // Arrays of house coordinates            
-      int[] xCordinates = new int[number_of_houses];
-      int[] yCordinates = new int[number_of_houses]; 
       
-      int k = 0;
-      for (int i = 0; i < A.length; i++) 
-        for (int j = 0; j < A[0].length; j++) 
-           if(A[i][j] == 1)
-           {
-               xCordinates[k] = i;
-               yCordinates[k] = j;
-               k++;
-           }
+       // Arrays of house coordinates            
+      int[] xCordinates = new int[A.length * A[0].length];
+      int[] yCordinates = new int[A.length * A[0].length]; 
      
-       // Calculates the distance from the farthest house
-       for (int x = 0; x < A.length; x++)
-            for (int y = 0; y < A[0].length; y++)
-                for (int i = 0; i < number_of_houses; i++)
-                {
+      for (int x = 0; x < A.length; x++) 
+        for (int y = 0; y < A[0].length; y++) 
+           if(A[x][y] == 1)
+           {
+               xCordinates[number_of_houses] = x;
+               yCordinates[number_of_houses] = y;
+               number_of_houses++;
+           }
+           
+      xCordinates = Arrays.copyOf(xCordinates,number_of_houses);
+      yCordinates = Arrays.copyOf(yCordinates,number_of_houses);
+      
+      for (int x = 0; x < A.length; x++)
+        for (int y = 0; y < A[0].length; y++)
+        {
+            // Calculates the distance from the farthest house
+            for (int i = 0; i < number_of_houses; i++)
+            {
+                distance_from_the_farthest_house = Math.abs( xCordinates[i] - x ) + Math.abs( yCordinates[i] - y );
+                Dist[x][y] = Dist[x][y] > distance_from_the_farthest_house ? Dist[x][y] : distance_from_the_farthest_house;
                     
-                    distance_from_the_farthest_house = Math.abs( xCordinates[i] - x ) + Math.abs( yCordinates[i] - y );
-                    Dist[x][y] = Dist[x][y] > distance_from_the_farthest_house ? Dist[x][y] : distance_from_the_farthest_house;
-                    
-                }
+            }
                 
-       // 0 is placed in the cell in which the house is located
-       for (int x = 0; x < A.length; x++)
-            for (int y = 0; y < A[0].length; y++)
-                for (int i = 0; i < number_of_houses; i++)
-                    if( (x == xCordinates[i]) && (y == yCordinates[i])  )
-                         Dist[x][y] = 0;
+            // 0 is placed in the cell in which the house is located
+            for (int i = 0; i < number_of_houses; i++)
+            {
+                if( (x == xCordinates[i]) && (y == yCordinates[i])  )
+                    Dist[x][y] = 0;
+              
+            }
+                
+            // Counting the number of empty cells at a distance of at most K to every house.
+            if( Dist[x][y] <= K &&  Dist[x][y] != 0) 
+                rezult++;
+            
+        }
                     
-        // Counting the number of empty cells at a distance of at most K to every house.     
-        for (int x = 0; x < A.length; x++)
-            for (int y = 0; y < A[0].length; y++)
-               if( Dist[x][y] <= K &&  Dist[x][y] != 0) 
-                    rezult++;
-                    
-       
+      
         return rezult;
     }
 
@@ -87,8 +83,7 @@ public class Main
         K = 1;
         int[][] C = new int[2][2];
         C[0][1] = 1;
-       
-        
+               
         s = solution( K ,  C );
        
        System.out.println("The number of empty cells at a distance of at most " + K + " to every house is = " + s);
@@ -97,8 +92,7 @@ public class Main
         K = 2;
         int[][] D = new int[10][10];
         D[0][1] = 1;
-       
-        
+               
         s = solution( K ,  D );
        
         System.out.println("The number of empty cells at a distance of at most " + K + " to every house is = " + s);
